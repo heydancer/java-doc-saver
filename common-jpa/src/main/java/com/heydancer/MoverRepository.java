@@ -10,11 +10,12 @@ import java.util.Optional;
 
 public interface MoverRepository extends JpaRepository<Mover, Long> {
     Optional<Mover> findByTelegramId(Long id);
-    List<Mover> findMoverByState(MoverState state);
 
     @Query("SELECT m FROM Mover AS m " +
             "WHERE m.state = :state")
     List<Mover> findMoversByState(MoverState state);
 
+    @Query("SELECT m FROM Mover AS m " +
+            "WHERE LOWER(m.lastName) LIKE %:lastName% ")
     List<Mover> findByLastName(String lastName);
 }

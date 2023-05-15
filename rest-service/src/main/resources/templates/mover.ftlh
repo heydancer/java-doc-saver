@@ -3,6 +3,7 @@
 
 <@c.page>
     <div>
+        <h5>Отправить сообшение всем пользователям:</h5>
         <form method="post" action="/movers/distribution">
             <label>
                 <input type="text" name="text" class="form-control" style="width: 800px" placeholder="Введите сообщение"/>
@@ -12,6 +13,7 @@
         </form>
     </div>
 
+    <h5 style="margin-top: 20px">Поиск:</h5>
     <form method="get" action="/movers">
         <label>
             <input type="text" name="lastName" class="form-control" value="${lastName}" placeholder="Введите фамилию">
@@ -28,7 +30,7 @@
             <th>Email</th>
             <th>Подразделение</th>
             <th>№ Звена</th>
-            <th>Изменить</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>

@@ -1,5 +1,6 @@
 package com.heydancer.controller;
 
+import com.heydancer.dto.DocumentDTO;
 import com.heydancer.entity.BinaryContent;
 import com.heydancer.entity.Document;
 import com.heydancer.service.DocService;
@@ -35,12 +36,6 @@ public class DocumentController {
 
     public DocumentController(DocService docService) {
         this.docService = docService;
-    }
-
-    @GetMapping
-    public String getPhotoPage(Model model) {
-        model.addAttribute("title", "Введите ID документа:");
-        return "file";
     }
 
     @GetMapping("/download")
@@ -105,5 +100,24 @@ public class DocumentController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping
+    public String getAllByFilter(Model model,
+                                 @RequestParam(required = false, defaultValue = "") String authorLastName,
+                                 @RequestParam(required = false, defaultValue = "") String subdivision,
+                                 @RequestParam(required = false, defaultValue= "") String link,
+                                 @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeStart,
+                                 @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeEnd) {
+        List<DocumentDTO> documentDTOS = docService.getAllByFilter(authorLastName, subdivision, link, rangeStart, rangeEnd);
+
+        model.addAttribute("documents", documentDTOS);
+        model.addAttribute("authorLastName", authorLastName);
+        model.addAttribute("subdivision", subdivision);
+        model.addAttribute("link", link);
+        model.addAttribute("rangeStart", rangeStart);
+        model.addAttribute("rangeEnd", rangeEnd);
+
+        return "file";
     }
 }

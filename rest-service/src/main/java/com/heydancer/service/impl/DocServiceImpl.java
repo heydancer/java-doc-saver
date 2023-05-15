@@ -1,8 +1,10 @@
 package com.heydancer.service.impl;
 
 import com.heydancer.DocumentRepository;
+import com.heydancer.dto.DocumentDTO;
 import com.heydancer.entity.BinaryContent;
 import com.heydancer.entity.Document;
+import com.heydancer.mapper.DocumentMapper;
 import com.heydancer.service.DocService;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
@@ -18,9 +20,11 @@ import java.util.List;
 @Service
 public class DocServiceImpl implements DocService {
     private final DocumentRepository documentRepository;
+    private final DocumentMapper documentMapper;
 
-    public DocServiceImpl(DocumentRepository appPhotoRepository) {
+    public DocServiceImpl(DocumentRepository appPhotoRepository, DocumentMapper documentMapper) {
         this.documentRepository = appPhotoRepository;
+        this.documentMapper = documentMapper;
     }
 
     @Override
@@ -32,7 +36,6 @@ public class DocServiceImpl implements DocService {
     @Override
     public FileSystemResource getFileSystemResource(BinaryContent binaryContent) {
         try {
-            //TODO добавить генерацию имени временного файла
             File temp = File.createTempFile("tempFile", ".bin");
             temp.deleteOnExit();
             FileUtils.writeByteArrayToFile(temp, binaryContent.getFileAsArrayOfBytes());
@@ -43,11 +46,15 @@ public class DocServiceImpl implements DocService {
         }
     }
 
-
     @Override
     public List<Document> getAllPhotos(LocalDate rangeStart, LocalDate rangeEnd) {
-        //TODO  добавить проверку времен
-
         return documentRepository.findAll(rangeStart, rangeEnd);
+    }
+
+    @Override
+    public List<DocumentDTO> getAllByFilter(String authorLastName, String subdivision, String link, LocalDate rangeStart, LocalDate rangeEnd) {
+        List<Document> documents = documentRepository.findAllByFilter(authorLastName.toLowerCase(), subdivision.toLowerCase(), link.toLowerCase(), rangeStart, rangeEnd);
+
+        return documentMapper.toDTOList(documents);
     }
 }

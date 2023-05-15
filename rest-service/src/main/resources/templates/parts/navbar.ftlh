@@ -1,7 +1,7 @@
 <#include "security.ftlh">
 <#import "login.ftlh" as l>
 
-<nav class="navbar navbar-expand-lg" style="background-color: #c447b2;">
+<nav class="navbar navbar-expand-lg" style="background-color: #cd5da9">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">DocSaver</a>
 
@@ -25,7 +25,7 @@
                 </#if>
                 <#if isAdmin>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/file">Файлы</a>
+                        <a class="nav-link active" aria-current="page" href="/file">Документы</a>
                     </li>
                 </#if>
                 <#if isAdmin>
@@ -37,10 +37,11 @@
 
             <ul class="navbar-nav ms-auto md-2 mb-pg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/login" style="font-size: 25px">&#127291;</a>
+                    <a class="navbar-brand" href="/login">
+                        <img src="/images/login.png" width="30" height="34" alt="login">
+                    </a>
                 </li>
             </ul>
-
 
             <div class="navbar-text me-3">${name}</div>
 

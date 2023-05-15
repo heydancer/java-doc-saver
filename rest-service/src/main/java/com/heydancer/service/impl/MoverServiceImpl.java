@@ -65,7 +65,7 @@ public class MoverServiceImpl implements MoverService {
 
     @Override
     public List<MoverDTO> getAllByLastName(String filter) {
-        List<Mover> movers = moverRepository.findByLastName(filter);
+        List<Mover> movers = moverRepository.findByLastName(filter.toLowerCase());
 
         return moverMapper.toDTOList(movers);
     }
