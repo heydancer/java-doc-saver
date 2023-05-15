@@ -15,5 +15,12 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "AND (cast(:end as date) is null OR doc.created <= cast(:end as date))")
     List<Document> findAll(LocalDate start, LocalDate end);
 
-
+    @Query("SELECT doc " +
+            "FROM Document AS doc " +
+            "WHERE LOWER(doc.mover.lastName) LIKE %:authorLastName% " +
+            "AND LOWER(doc.mover.subdivision) LIKE %:subdivision% " +
+            "AND lower(doc.mover.link) like  %:link% " +
+            "AND (cast(:start as date) is null OR doc.created >= cast(:start as date)) " +
+            "AND (cast(:end as date) is null OR doc.created <= cast(:end as date))")
+    List<Document> findAllByFilter(String authorLastName, String subdivision, String link, LocalDate start, LocalDate end);
 }

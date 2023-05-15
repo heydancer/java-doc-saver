@@ -20,6 +20,7 @@
         <module>common-jpa</module>
         <module>common-rabbitmq</module>
         <module>main-service</module>
+        <module>rest-service</module>
     </modules>
 
     <properties>
