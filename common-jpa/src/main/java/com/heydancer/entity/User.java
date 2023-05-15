@@ -66,7 +66,7 @@ public class User implements UserDetails {
         return isActive();
     }
 
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return roles.contains(Role.ADMIN);
     }
 }

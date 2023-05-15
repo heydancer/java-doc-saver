@@ -3,6 +3,7 @@ package com.heydancer.controller;
 import com.heydancer.UserRepository;
 import com.heydancer.entity.User;
 import com.heydancer.entity.enums.Role;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,12 +12,9 @@ import java.util.Collections;
 import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor
 public class RegistrationController {
     private final UserRepository userRepository;
-
-    public RegistrationController(UserRepository userRepo) {
-        this.userRepository = userRepo;
-    }
 
     @GetMapping("/registration")
     public String registration() {

@@ -4,6 +4,7 @@ import com.heydancer.dto.DocumentDTO;
 import com.heydancer.entity.BinaryContent;
 import com.heydancer.entity.Document;
 import com.heydancer.service.DocService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -28,28 +29,28 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Log4j
-@RequestMapping("/file")
-@PreAuthorize("hasAuthority('ADMIN')")
 @Controller
+@RequestMapping("/file")
+@RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
 public class DocumentController {
     private final DocService docService;
 
-    public DocumentController(DocService docService) {
-        this.docService = docService;
-    }
-
     @GetMapping("/download")
-    public ResponseEntity<?> getPhoto(@RequestParam("id") String id) {
+    public ResponseEntity<?> getPhoto(@RequestParam("id") Long id) {
         Document photo = docService.getPhoto(id);
         if (photo == null) {
             return ResponseEntity.badRequest().build();
         }
+
         BinaryContent binaryContent = photo.getBinaryContent();
         FileSystemResource fileSystemResource = docService.getFileSystemResource(binaryContent);
 
         if (fileSystemResource == null) {
             return ResponseEntity.internalServerError().build();
         }
+
+        log.info("Download photo by id=" + id);
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;")
@@ -57,8 +58,10 @@ public class DocumentController {
     }
 
     @GetMapping("/download/all")
-    public ResponseEntity<?> getAllPhotoZip(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeStart,
-                                            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeEnd) {
+    public ResponseEntity<?> getAllPhotoZip(@RequestParam(required = false)
+                                            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeStart,
+                                            @RequestParam(required = false)
+                                            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeEnd) {
 
         List<Document> photo = docService.getAllPhotos(rangeStart, rangeEnd);
         List<Resource> resources = new ArrayList<>();
@@ -99,16 +102,20 @@ public class DocumentController {
             e.printStackTrace();
         }
 
+        log.info("Download all photos");
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping
-    public String getAllByFilter(Model model,
-                                 @RequestParam(required = false, defaultValue = "") String authorLastName,
+    public String getAllByFilter(@RequestParam(required = false, defaultValue = "") String authorLastName,
                                  @RequestParam(required = false, defaultValue = "") String subdivision,
-                                 @RequestParam(required = false, defaultValue= "") String link,
-                                 @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeStart,
-                                 @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeEnd) {
+                                 @RequestParam(required = false, defaultValue = "") String link,
+                                 @RequestParam(required = false)
+                                 @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeStart,
+                                 @RequestParam(required = false)
+                                 @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate rangeEnd,
+                                 Model model) {
+
         List<DocumentDTO> documentDTOS = docService.getAllByFilter(authorLastName, subdivision, link, rangeStart, rangeEnd);
 
         model.addAttribute("documents", documentDTOS);
@@ -118,6 +125,7 @@ public class DocumentController {
         model.addAttribute("rangeStart", rangeStart);
         model.addAttribute("rangeEnd", rangeEnd);
 
+        log.info("Getting photos by filter");
         return "file";
     }
 }

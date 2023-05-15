@@ -9,12 +9,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface DocService {
-    Document getPhoto(String id);
+    Document getPhoto(Long id);
 
     FileSystemResource getFileSystemResource(BinaryContent binaryContent);
 
     List<Document> getAllPhotos(LocalDate rangeStart, LocalDate rangeEnd);
 
-    List<DocumentDTO> getAllByFilter(String authorLastName, String subdivision, String link, LocalDate rangeStart, LocalDate rangeEnd);
-
+    List<DocumentDTO> getAllByFilter(String authorLastName,
+                                     String subdivision,
+                                     String link,
+                                     LocalDate rangeStart,
+                                     LocalDate rangeEnd);
 }

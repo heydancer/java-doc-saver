@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
-
     @Query("SELECT doc " +
             "FROM Document AS doc " +
             "WHERE (cast(:start as date) is null OR doc.created >= cast(:start as date)) " +
@@ -22,5 +21,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             "AND lower(doc.mover.link) like  %:link% " +
             "AND (cast(:start as date) is null OR doc.created >= cast(:start as date)) " +
             "AND (cast(:end as date) is null OR doc.created <= cast(:end as date))")
-    List<Document> findAllByFilter(String authorLastName, String subdivision, String link, LocalDate start, LocalDate end);
+    List<Document> findAllByFilter(String authorLastName, String subdivision,
+                                   String link, LocalDate start, LocalDate end);
 }

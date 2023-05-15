@@ -2,6 +2,7 @@ package com.heydancer.manager;
 
 import com.heydancer.service.UpdateProducer;
 import com.heydancer.utils.MessageUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,15 +14,11 @@ import static com.heydancer.model.RabbitQueue.TEXT_MESSAGE_UPDATE;
 
 @Log4j
 @Component
+@RequiredArgsConstructor
 public class UpdateProcessor {
     private TelegramBot telegramBot;
     private final MessageUtils messageUtils;
     private final UpdateProducer updateProducer;
-
-    public UpdateProcessor(MessageUtils messageUtils, UpdateProducer updateProducer) {
-        this.messageUtils = messageUtils;
-        this.updateProducer = updateProducer;
-    }
 
     public void registerBot(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;

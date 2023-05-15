@@ -6,6 +6,7 @@ import com.heydancer.entity.BinaryContent;
 import com.heydancer.entity.Document;
 import com.heydancer.mapper.DocumentMapper;
 import com.heydancer.service.DocService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -18,18 +19,13 @@ import java.util.List;
 
 @Log4j
 @Service
+@RequiredArgsConstructor
 public class DocServiceImpl implements DocService {
     private final DocumentRepository documentRepository;
     private final DocumentMapper documentMapper;
 
-    public DocServiceImpl(DocumentRepository appPhotoRepository, DocumentMapper documentMapper) {
-        this.documentRepository = appPhotoRepository;
-        this.documentMapper = documentMapper;
-    }
-
     @Override
-    public Document getPhoto(String photoId) {
-        Long id = Long.parseLong(photoId);
+    public Document getPhoto(Long id) {
         return documentRepository.findById(id).orElse(null);
     }
 
@@ -52,7 +48,11 @@ public class DocServiceImpl implements DocService {
     }
 
     @Override
-    public List<DocumentDTO> getAllByFilter(String authorLastName, String subdivision, String link, LocalDate rangeStart, LocalDate rangeEnd) {
+    public List<DocumentDTO> getAllByFilter(String authorLastName,
+                                            String subdivision,
+                                            String link,
+                                            LocalDate rangeStart,
+                                            LocalDate rangeEnd) {
         List<Document> documents = documentRepository.findAllByFilter(authorLastName.toLowerCase(), subdivision.toLowerCase(), link.toLowerCase(), rangeStart, rangeEnd);
 
         return documentMapper.toDTOList(documents);

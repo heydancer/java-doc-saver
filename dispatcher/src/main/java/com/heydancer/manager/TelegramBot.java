@@ -1,5 +1,6 @@
 package com.heydancer.manager;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import javax.annotation.PostConstruct;
 
 @Log4j
 @Component
+@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
     @Value("${telegram.bot.name}")
     private String botName;
@@ -20,10 +22,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String botToken;
 
     private final UpdateProcessor updateProcessor;
-
-    public TelegramBot(UpdateProcessor updateProcessor) {
-        this.updateProcessor = updateProcessor;
-    }
 
     @PostConstruct
     public void init() {

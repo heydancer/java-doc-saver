@@ -62,6 +62,7 @@ public class MoverController {
                            @RequestParam String subdivision,
                            @RequestParam String link,
                            @RequestParam("moverId") Mover mover) {
+
         log.info("Saving mover");
 
         moverService.save(mover, firstName, lastName, email, link, subdivision);
@@ -84,8 +85,9 @@ public class MoverController {
 
     @PostMapping("/distribution")
     public String replyAll(@RequestParam String text) {
+        log.info("Send message to movers");
+
         moverService.replyToAll(text);
         return "redirect:/movers";
-
     }
 }
