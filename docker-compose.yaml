@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  dispatcher:
+    build: ./dispatcher
+    container_name: dispatcher_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq-container
+      - SPRING_RABBITMQ_PORT=5672
+
+  rabbitmq:
+    image: rabbitmq:3.11.0-management
+    container_name: rabbitmq-container
+    environment:
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  main-service:
+    build: ./main-service
+    container_name: main-service_container
+    ports:
+      - "9090:9090"
+    depends_on:
+      - rabbitmq
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/docsaver
+      - SPRING_RABBITMQ_HOST=rabbitmq-container
+      - SPRING_RABBITMQ_PORT=5672
+
+  rest-service:
+    build: ./rest-service
+    container_name: rest-service_container
+    ports:
+      - "8086:8086"
+    depends_on:
+      - rabbitmq
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/docsaver
+      - SPRING_RABBITMQ_HOST=rabbitmq-container
+      - SPRING_RABBITMQ_PORT=5672
+
+  db:
+    image: postgres:15.2
+    container_name: postgres_db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=docsaver
+      - POSTGRES_USER=userok
+      - POSTGRES_PASSWORD=p@ssw0rd
